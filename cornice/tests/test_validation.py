@@ -78,9 +78,11 @@ class TestServiceDefinition(LoggingCatcher, TestCase):
 
         # test that using a callable to define what's accepted works as well
         res = app.get('/service3', headers={'Accept': 'audio/*'}, status=406)
+        self.assertTrue('application/json' in res.json)
         self.assertTrue('text/json' in res.json)
 
-        app.get('/service3', headers={'Accept': 'text/*'}, status=200)
+        r = app.get('/service3', headers={'Accept': 'text/*'}, status=200)
+        self.assertEquals(r.content_type, "text/json")
 
     def test_filters(self):
         app = TestApp(main({}))
